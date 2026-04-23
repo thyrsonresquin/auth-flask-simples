@@ -21,10 +21,10 @@ def login():
     password = data.get('password')
 
     if username and password:
-        return jsonify({'message': 'login bem-sucedido'}), 200
-    else:
-        return jsonify({'message': 'credenciais invalidas'}), 400
-    
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            return jsonify({'message': 'autenticação realizada com sucesso!'}), 200
+    return jsonify({'message': 'credenciais invalidas'}), 400
 
 @app.route('/hello', methods=['GET'])
 def hello():
