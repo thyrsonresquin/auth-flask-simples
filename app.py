@@ -23,7 +23,7 @@ def login():
     if username and password:
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            return jsonify({'message': 'autenticação realizada com sucesso!'}), 200
+            return jsonify({'message': 'autenticação realizada com sucesso!!'}), 200
     return jsonify({'message': 'credenciais invalidas'}), 400
 
 @app.route('/hello', methods=['GET'])
