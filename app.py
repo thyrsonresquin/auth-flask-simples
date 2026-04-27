@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from models.user import User
 from database import db
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -31,6 +31,12 @@ def login():
             print(current_user.is_authenticated)  # verifica se o usuário está autenticado
             return jsonify({'message': 'autenticação realizada com sucesso!!'}), 200
     return jsonify({'message': 'credenciais invalidas'}), 400
+
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'logout realizado com sucesso!!'}), 200
 
 @app.route('/hello', methods=['GET'])
 def hello():
