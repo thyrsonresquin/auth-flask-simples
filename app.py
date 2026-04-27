@@ -14,6 +14,10 @@ login_manager.login_view = 'login'
 
 # session <- conexão ativa com o banco de dados
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
