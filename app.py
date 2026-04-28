@@ -39,7 +39,6 @@ def logout():
     return jsonify({'message': 'logout realizado com sucesso!!'}), 200
 
 @app.route('/user', methods=['POST'])
-@login_required
 def create_user():
     data = request.get_json()
     username = data.get('username')
@@ -65,20 +64,13 @@ def get_user(user_id):
 @app.route('/user/<int:user_id>', methods=['PUT'])
 @login_required
 def update_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'message': 'usuário não encontrado'}), 404
-    if user.id != current_user.id:
-        return jsonify({'message': 'acesso negado'}), 403
     data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    if username:
-        user.username = username
-    if password:
-        user.password = password
-    db.session.commit()
-    return jsonify({'message': 'usuário atualizado com sucesso!!'}), 200
+    user = User.query.get(user_id)
+    if user and data.get('password'):
+        user.password = data.get('password')
+        db.session.commit()
+        return jsonify({'message': 'senha atualizada com sucesso!!'}), 200
+    return jsonify({'message': 'dados inválidos'}), 400
 
 @app.route('/user/<int:user_id>', methods=['DELETE'])
 @login_required
