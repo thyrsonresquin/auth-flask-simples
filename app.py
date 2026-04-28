@@ -80,7 +80,17 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({'message': 'usuário atualizado com sucesso!!'}), 200
 
-
+@app.route('/user/<int:user_id>', methods=['DELETE'])
+@login_required
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'usuário não encontrado'}), 404
+    if user.id != current_user.id:
+        return jsonify({'message': 'acesso negado'}), 403
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'usuário excluído com sucesso!!'}), 200
 
 @app.route('/hello', methods=['GET'])
 def hello():
