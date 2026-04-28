@@ -52,6 +52,16 @@ def create_user():
         return jsonify({'message': 'usuário criado com sucesso!!'}), 201
     return jsonify({'message': 'dados inválidos'}), 400
 
+@app.route('/user/<int:user_id>', methods=['GET'])
+@login_required
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'usuário não encontrado'}), 404
+    if user.id != current_user.id:
+        return jsonify({'message': 'acesso negado'}), 403
+    return jsonify({'username': user.username})
+
 @app.route('/hello', methods=['GET'])
 def hello():
     return 'Hello, World!'
