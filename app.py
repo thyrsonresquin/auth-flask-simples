@@ -10,10 +10,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 login_manager = LoginManager()
 db.init_app(app)
 login_manager.init_app(app)
+# view login <- rota para redirecionar usuários não autenticados
 login_manager.login_view = 'login'
 
 # session <- conexão ativa com o banco de dados
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -39,6 +39,7 @@ def logout():
     return jsonify({'message': 'logout realizado com sucesso!!'}), 200
 
 @app.route('/user', methods=['POST'])
+@login_required
 def create_user():
     data = request.get_json()
     username = data.get('username')
