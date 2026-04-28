@@ -62,6 +62,26 @@ def get_user(user_id):
         return jsonify({'message': 'acesso negado'}), 403
     return jsonify({'username': user.username})
 
+@app.route('/user/<int:user_id>', methods=['PUT'])
+@login_required
+def update_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'usuário não encontrado'}), 404
+    if user.id != current_user.id:
+        return jsonify({'message': 'acesso negado'}), 403
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if username:
+        user.username = username
+    if password:
+        user.password = password
+    db.session.commit()
+    return jsonify({'message': 'usuário atualizado com sucesso!!'}), 200
+
+
+
 @app.route('/hello', methods=['GET'])
 def hello():
     return 'Hello, World!'
