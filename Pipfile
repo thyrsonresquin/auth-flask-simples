@@ -9,7 +9,8 @@ flask-sqlalchemy = "==3.1.1"
 flask-login = "==0.6.2"
 werkzeug = "==2.3.0"
 pymysql = "==1.1.0"
-cryptography = "==41.0.7"
+cryptography = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
