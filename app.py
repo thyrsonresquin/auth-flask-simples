@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 load_dotenv()
 
+#configuração se segurança e banco de dados
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-key-for-dev')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
