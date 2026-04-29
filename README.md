@@ -15,3 +15,4 @@ Repositório criado para armazenar o código da API de autenticação com banco 
 - JWT (JSON Web Tokens)
 - MySQL
 - Docker (para containerização do banco de dados)
+- bcrypt (para hashing de senhas)
