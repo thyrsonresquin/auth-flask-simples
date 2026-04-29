@@ -5,12 +5,11 @@ from database import db
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from dotenv import load_dotenv
 
-app = Flask(__name__)
 load_dotenv()
 
-#configuração se segurança e banco de dados
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-key-for-dev')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
 login_manager = LoginManager()
 db.init_app(app)
@@ -50,7 +49,7 @@ def create_user():
     password = data.get('password')
 
     if username and password:
-        user = User(username=username, password=password)
+        user = User(username=username, password=password, role='user')
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': 'usuário criado com sucesso!!'}), 201
@@ -71,6 +70,10 @@ def get_user(user_id):
 def update_user(user_id):
     data = request.get_json()
     user = User.query.get(user_id)
+
+    if user_id != current_user.id and current_user.role != 'admin':
+        return jsonify({'message': 'operação não permitida!'}), 403
+    
     if user and data.get('password'):
         user.password = data.get('password')
         db.session.commit()
@@ -81,6 +84,9 @@ def update_user(user_id):
 @login_required
 def delete_user(user_id):
     user = User.query.get(user_id)
+
+    if current_user.role != 'admin':
+        return jsonify({'message': 'operação não permitida!'}), 403
     if not user:
         return jsonify({'message': 'usuário não encontrado'}), 404
     if user.id != current_user.id:
