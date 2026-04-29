@@ -1,4 +1,5 @@
 import os
+import bcrypt
 from flask import Flask, request, jsonify
 from models.user import User
 from database import db
@@ -30,7 +31,7 @@ def login():
 
     if username and password:
         user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        if user and bcrypt.checkpw(password.encode('utf-8'), str.encode(user.password)):
             login_user(user)
             print(current_user.is_authenticated)  # verifica se o usuário está autenticado
             return jsonify({'message': 'autenticação realizada com sucesso!!'}), 200
@@ -49,7 +50,10 @@ def create_user():
     password = data.get('password')
 
     if username and password:
-        user = User(username=username, password=password, role='user')
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    if username and password:
+        user = User(username=username, password=hashed_password, role='user')
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': 'usuário criado com sucesso!!'}), 201
