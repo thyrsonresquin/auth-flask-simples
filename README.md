@@ -14,5 +14,5 @@ Repositório criado para armazenar o código da API de autenticação com banco 
 - SQLAlchemy
 - JWT (JSON Web Tokens)
 - MySQL
-- Docker (para containerização do banco de dados)
+- Docker
 - bcrypt (para hashing de senhas)
